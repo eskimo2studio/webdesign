@@ -5,4 +5,4 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   base: '/webdesign/', // ชื่อ repository ของคุณ
   plugins: [react()],
-})
+});
