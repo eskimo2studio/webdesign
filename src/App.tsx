@@ -41,7 +41,7 @@ function AppContent() {
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/webdesign">
       <AppContent />
     </BrowserRouter>
   );
