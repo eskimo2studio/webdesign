@@ -1,0 +1,294 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Footer } from '../components/Footer';
+
+const TITLE_TEXT = 'ทำเว็บไซต์ร้านค้าออนไลน์';
+
+// ─── FAQ DATA ─────────────────────────────────────────────────────────────────
+const faqs = [
+  {
+    question: 'ทำเว็บร้านค้าออนไลน์ใช้เวลานานแค่ไหน?',
+    answer: 'โดยทั่วไปใช้เวลาประมาณ 4-6 สัปดาห์ ขึ้นอยู่กับจำนวนสินค้าและฟีเจอร์พิเศษที่ต้องการ เช่น ระบบสมาชิก ระบบคูปอง หรือการเชื่อมต่อกับระบบอื่น'
+  },
+  {
+    question: 'ต้องเตรียมอะไรบ้างก่อนเริ่มทำเว็บร้านค้า?',
+    answer: 'ข้อมูลสินค้า (รูปภาพ รายละเอียด ราคา) รายละเอียดการจัดส่ง วิธีการชำระเงิน เงื่อนไขการคืนสินค้า และโดเมนที่ต้องการใช้ เราจะช่วยแนะนำในรายละเอียดเพิ่มเติม'
+  },
+  {
+    question: 'สามารถเพิ่ม-ลด สินค้าเองได้ไหม?',
+    answer: 'ได้ครับ เรามีระบบจัดการหลังบ้าน (Admin Panel) ที่ใช้งานง่าย สามารถเพิ่ม แก้ไข ลบสินค้า อัปโหลดรูปภาพ จัดการคำสั่งซื้อ และดูรายงานยอดขายได้ด้วยตัวเอง'
+  },
+  {
+    question: 'รองรับการชำระเงินแบบไหนบ้าง?',
+    answer: 'รองรับหลายช่องทาง เช่น โอนเงินผ่านธนาคาร บัตรเครดิต/เดบิต QR Code พร้อมเพย์ และ Payment Gateway ต่างๆ เช่น Omise, 2C2P, Stripe หรือสามารถเลือกช่องทางที่ต้องการได้'
+  },
+  {
+    question: 'มีค่าใช้จ่ายรายเดือนไหม?',
+    answer: 'ค่าใช้จ่ายหลักคือโฮสติ้ง (300-1,500 บาท/เดือน) และค่า Payment Gateway (ประมาณ 2-3% ต่อยอดขาย) หากต้องการบริการดูแลรักษาเว็บไซต์ เรามีแพ็กเกจเริ่มต้นที่ 3,000 บาท/เดือน'
+  },
+];
+
+function FAQItem({ faq, index }: { faq: typeof faqs[0]; index: number }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="border-b border-black/10 last:border-0">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex w-full items-start justify-between gap-4 py-6 text-left transition-colors hover:text-black/60"
+      >
+        <span className="flex-1 text-lg font-semibold leading-tight">
+          {index + 1}. {faq.question}
+        </span>
+        <span
+          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black/5 text-black transition-transform duration-300"
+          style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+      </button>
+      <div
+        className="overflow-hidden transition-all duration-300"
+        style={{
+          maxHeight: isOpen ? '500px' : '0',
+          opacity: isOpen ? 1 : 0,
+        }}
+      >
+        <p className="pb-6 text-base leading-relaxed text-black/70">
+          {faq.answer}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function useTypewriter(text: string, speed = 50, startDelay = 300) {
+  const [displayed, setDisplayed] = useState('');
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    setDisplayed('');
+    setDone(false);
+    const delay = window.setTimeout(() => {
+      let index = 0;
+      const interval = window.setInterval(() => {
+        index += 1;
+        setDisplayed(text.slice(0, index));
+        if (index >= text.length) {
+          window.clearInterval(interval);
+          setDone(true);
+        }
+      }, speed);
+    }, startDelay);
+    return () => window.clearTimeout(delay);
+  }, [text, speed, startDelay]);
+
+  return { displayed, done };
+}
+
+const features = [
+  {
+    title: 'ระบบจัดการสินค้า',
+    description: 'เพิ่ม แก้ไข ลบสินค้าได้ง่าย พร้อมจัดหมวดหมู่ แท็ก และตัวกรองสินค้า',
+  },
+  {
+    title: 'ระบบตรวจสอบคำสั่งซื้อ',
+    description: 'ดูคำสั่งซื้อแบบ real-time อัปเดตสถานะ พิมพ์ใบเสร็จ และจัดการการจัดส่ง',
+  },
+  {
+    title: 'ระบบชำระเงินครบครัน',
+    description: 'รองรับหลายช่องทาง: โอนเงิน, บัตรเครดิต, QR Code พร้อมระบบยืนยันอัตโนมัติ',
+  },
+  {
+    title: 'ระบบสมาชิก',
+    description: 'ลูกค้าสามารถสมัครสมาชิก ดูประวัติการสั่งซื้อ และติดตามพัสดุได้',
+  },
+  {
+    title: 'ระบบคูปองส่วนลด',
+    description: 'สร้างโปรโมชั่น คูปองส่วนลด และโค้ดส่วนลดเพื่อกระตุ้นยอดขาย',
+  },
+  {
+    title: 'Responsive Design',
+    description: 'ใช้งานได้ลื่นไหลบนมือถือ แท็บเล็ต และคอมพิวเตอร์',
+  },
+];
+
+export function Ecommerce() {
+  const { displayed, done } = useTypewriter(TITLE_TEXT, 40);
+  const [contentVisible, setContentVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setContentVisible(true), 800);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  return (
+    <main className="relative min-h-screen text-black">
+      {/* Hero Section */}
+      <section className="relative z-[1] flex min-h-[90vh] flex-col justify-end px-5 pb-12 sm:px-8 md:justify-center md:px-10 md:pb-0">
+        <div className="relative z-10 max-w-4xl mt-32 md:mt-0 pt-16">
+          <p className="mb-4 text-lg font-medium tracking-wide uppercase text-black/60">
+            E-Commerce Website (ร้านค้าออนไลน์)
+          </p>
+          <h1
+            className="mb-8 min-h-[120px] text-black sm:min-h-[80px]"
+            style={{
+              fontSize: 'clamp(32px, 5vw, 56px)',
+              lineHeight: 1.2,
+              fontWeight: 600,
+              fontFamily: 'var(--font-heading)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {displayed}
+            {!done && (
+              <span
+                className="ml-[4px] inline-block h-[1em] w-[3px] align-middle"
+                style={{ background: '#000', animation: 'blink 1s step-end infinite' }}
+              />
+            )}
+          </h1>
+
+          <div
+            className="text-black/80 max-w-3xl transition-all duration-700 space-y-6"
+            style={{
+              fontSize: 'clamp(16px, 2vw, 20px)',
+              lineHeight: 1.6,
+              opacity: contentVisible ? 1 : 0,
+              transform: contentVisible ? 'translateY(0)' : 'translateY(15px)',
+            }}
+          >
+            <p>
+              เปิดร้านค้าออนไลน์ที่ทำงานได้จริง ขายได้ 24/7 
+              พร้อมระบบจัดการที่ใช้งานง่ายและครบครัน
+            </p>
+            <p>
+              เราสร้างเว็บไซต์ร้านค้าออนไลน์ที่ไม่เพียงแค่สวยงาม 
+              แต่ยังมีระบบจัดการสินค้า คำสั่งซื้อ และชำระเงินที่ทำงานได้อย่างมีประสิทธิภาพ
+              เพื่อให้คุณสามารถขายสินค้าออนไลน์ได้อย่างง่ายดาย
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="relative z-[2] px-5 py-24 sm:px-8 md:px-10">
+        <div className="max-w-5xl mx-auto space-y-20">
+          
+          <div>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-12" style={{ fontFamily: 'var(--font-heading)' }}>
+              ฟีเจอร์สำหรับร้านค้าออนไลน์
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {features.map((feature, i) => (
+                <div key={i} className="h-full p-8 rounded-3xl bg-white/80 border border-white/60 shadow-sm hover:shadow-md transition-shadow duration-300">
+                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                  <p className="text-black/70 leading-relaxed">{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Benefits */}
+          <div className="bg-white/80 p-10 sm:p-14 rounded-[2.5rem] border border-white shadow-lg">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-8" style={{ fontFamily: 'var(--font-heading)' }}>
+              ทำไมต้องมีร้านค้าออนไลน์?
+            </h2>
+            <div className="space-y-6 text-lg text-black/80 leading-relaxed mb-10">
+              <p>
+                🛒 <strong>ขายได้ตลอด 24 ชั่วโมง:</strong> ลูกค้าสามารถซื้อสินค้าได้ทุกเวลา ไม่จำกัดเวลาเปิด-ปิดร้าน
+              </p>
+              <p>
+                📦 <strong>ลดต้นทุนร้านค้า:</strong> ไม่ต้องเช่าพื้นที่ ไม่ต้องจ้างพนักงานขาย ประหยัดค่าใช้จ่าย
+              </p>
+              <p>
+                🌍 <strong>เข้าถึงลูกค้าทั่วประเทศ:</strong> ไม่จำกัดพื้นที่ ขายได้ทุกจังหวัด ทุกภูมิภาค
+              </p>
+              <p>
+                📊 <strong>วิเคราะห์ข้อมูลลูกค้า:</strong> เก็บข้อมูลพฤติกรรมการซื้อ ช่วยวางแผนธุรกิจได้ดีขึ้น
+              </p>
+              <p>
+                💰 <strong>เพิ่มยอดขายได้ง่าย:</strong> ทำโปรโมชั่น ส่งคูปอง และทำการตลาดออนไลน์ได้สะดวก
+              </p>
+            </div>
+
+            {/* FAQ Section */}
+            <div className="border-t border-black/10 pt-10">
+              <h3 className="text-2xl font-bold mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
+                คำถามที่พบบ่อย (FAQ)
+              </h3>
+              <div className="space-y-4">
+                {faqs.map((faq, index) => (
+                  <FAQItem key={index} faq={faq} index={index} />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Section */}
+          <div className="bg-white/80 p-10 sm:p-14 rounded-[2.5rem] border border-white shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-black/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+
+            <div className="relative z-10 text-center max-w-2xl mx-auto">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-6" style={{ fontFamily: 'var(--font-heading)' }}>
+                พร้อมเปิดร้านค้าออนไลน์แล้วหรือยัง?
+              </h2>
+              <p className="text-lg text-black/70 mb-10 leading-relaxed">
+                ปรึกษาฟรี! มาคุยกันเกี่ยวกับสินค้าและแผนการขายออนไลน์ของคุณ
+              </p>
+              <Link
+                to="/contact"
+                className="inline-flex items-center justify-center rounded-full bg-black px-8 py-4 text-[17px] font-medium text-white transition-transform duration-300 hover:scale-105 hover:bg-black/90"
+              >
+                เริ่มต้นโปรเจกต์กับเรา
+                <svg className="ml-3" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+              
+              {/* Contact Info */}
+              <div className="pt-8 border-t border-black/10 mt-10">
+                <h3 className="text-3xl font-bold mb-8" style={{ fontFamily: 'var(--font-heading)' }}>ติดต่อเรา</h3>
+                <div className="flex flex-col items-center justify-center gap-6">
+                  {/* QR Code */}
+                  <div className="mb-2">
+                    <img src="https://qr-official.line.me/gs/M_949gpyab_BW.png?oat_content=qr" alt="LINE QR Code" className="w-48 h-48 object-contain rounded-2xl shadow-sm border border-black/10" />
+                  </div>
+
+                  {/* Facebook / Line ID / Tel in the same line */}
+                  <div className="flex flex-col md:flex-row items-center justify-center gap-x-10 gap-y-6 text-xl font-medium mt-4">
+                    <a href="https://www.facebook.com/eskimostudio" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-black/80 hover:text-black transition-colors">
+                      <svg className="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      </svg>
+                      <span>eskimostudio</span>
+                    </a>
+
+                    <a href="https://lin.ee/X3QAmWB" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-black/80 hover:text-black transition-colors">
+                      <img 
+                        src="https://cdn-icons-png.flaticon.com/512/3128/3128218.png" 
+                        alt="LINE" 
+                        className="w-8 h-8"
+                      />
+                      <span>@eskimo</span>
+                    </a>
+
+                    <a href="tel:0924949288" className="flex items-center gap-3 text-black/80 hover:text-black transition-colors">
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                      <span>092-494-9288</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}
