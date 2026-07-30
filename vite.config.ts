@@ -3,5 +3,6 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
-});
+  base: '/webdesign/', // ชื่อ repository ของคุณ
+  plugins: [react()],
+})
