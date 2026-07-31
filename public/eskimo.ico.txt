@@ -1,0 +1,3 @@
+คุณต้องวางไฟล์ eskimo.ico จริงที่นี่
+ไฟล์นี้เป็นเพียง placeholder
+วางไฟล์ eskimo.ico ของคุณที่ /Users/prachya.jum/Desktop/Pok/Eskimo/Eskimo/public/eskimo.ico
