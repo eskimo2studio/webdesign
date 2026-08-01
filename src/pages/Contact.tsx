@@ -54,7 +54,7 @@ export function Contact() {
                   style={{
                     fontSize: 'clamp(32px, 5vw, 56px)',
                     lineHeight: 1.2,
-                    fontWeight: 600,
+                    fontWeight: 900,
                     fontFamily: 'var(--font-heading)',
                   }}
                 >
