@@ -141,9 +141,7 @@ export function Contact() {
             {/* Right Column - Google Form Embed */}
             <div className="flex flex-col justify-center">
               <div className="rounded-[28px] border border-white/60 bg-white/80 p-8 shadow-lg">
-                <h2 className="mb-6 text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>
-                  ส่งข้อความถึงเรา
-                </h2>
+               
                 
                 {/* Embedded Google Form */}
                 <div className="relative w-full overflow-hidden rounded-2xl" style={{ height: '800px' }}>
